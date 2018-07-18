@@ -11,78 +11,76 @@ new Vue({
       this.gameIsRunning = true
       this.playerHealth = 100
       this.monsterHealth = 100
-      this.turns = []
     },
     endGame() {
-      this.gameIsRunning = false
+      if (confirm('Are You Sure Want To Give Up ?')) {
+        this.gameIsRunning = false
+      } else {
+        this.gameIsRunning = true
+      }
     },
     attack() {
-      var damage = this.calculateDamage(3,10)
+      let damage = this.calculateDamage(3, 10)
       this.monsterHealth = this.monsterHealth - damage
       this.turns.unshift({
-        isPlayer : true,
-        message : 'Player Hits Monster For ' + damage + ' Damaged'
+        isPlayer: true,
+        text: 'Player Hits Monster For ' + damage
       })
       if (this.checkWin()) {
         return;
       }
-
       this.monsterAttack()
     },
     specialAttack() {
-      var damage = this.calculateDamage(10,20)
+      let damage = this.calculateDamage(10,12)
       this.monsterHealth = this.monsterHealth - damage
       this.turns.unshift({
-        isPlayer : true,
-        message : 'Player Hits Monster Hard For ' + damage + ' Damaged'
+        isPlayer: true,
+        text: 'Player Hits Monster With Special Attack For' + damage
       })
       if (this.checkWin()) {
         return;
       }
-
       this.monsterAttack()
-    },
-    monsterAttack() {
-      var damage = this.calculateDamage(5,12)
-      this.playerHealth = this.playerHealth - damage
-      this.turns.unshift({
-        isPlayer : false,
-        message : 'Monster Hits Player For ' + damage + ' Damaged'
-      })
-      this.checkWin();
     },
     heal() {
-      if (this.playerHealth <= 90) {
-        this.playerHealth = this.playerHealth + 10
-      } else {
+      if (this.playerHealth >= 90) {
         this.playerHealth = 100
+        this.monsterAttack()
+      } else {
+        this.playerHealth = this.playerHealth + 10
+        this.monsterAttack()
       }
+    },
+    monsterAttack() {
+      var damage = this.calculateDamage(5, 12)
+      this.playerHealth = this.playerHealth - damage
       this.turns.unshift({
-        isPlayer : true,
-        message : 'Player Healing For 10'
+        isPlayer: false,
+        text: 'Monster Hits Player For ' + damage
       })
-      this.monsterAttack()
+      this.checkWin()
     },
     calculateDamage(min, max) {
-      return Math.max(Math.round(Math.random() * max), min)
+      return Math.max(Math.floor(Math.random() * max) + 1, min)
     },
     checkWin() {
       if (this.monsterHealth <= 0) {
-        if (confirm('You Won! New Game ?')) {
+        if (confirm('You Won! New Game?')) {
           this.startGame()
         } else {
           this.gameIsRunning = false
         }
-        return true;
+        return true
       } else if (this.playerHealth <= 0) {
-        if (confirm('You Lost! New Game ?')) {
+        if (confirm('You Lost! New Game?')) {
           this.startGame()
         } else {
           this.gameIsRunning = false
         }
-        return true;
+        return true
       }
-      return false;
+      return false
     }
   }
 })

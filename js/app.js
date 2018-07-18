@@ -15,6 +15,7 @@ new Vue({
     endGame() {
       if (confirm('Are You Sure Want To Give Up ?')) {
         this.gameIsRunning = false
+        this.turns = []
       } else {
         this.gameIsRunning = true
       }
@@ -49,6 +50,10 @@ new Vue({
         this.monsterAttack()
       } else {
         this.playerHealth = this.playerHealth + 10
+        this.turns.unshift({
+          isPlayer: true,
+          text: 'Player Heal For 10'
+        })
         this.monsterAttack()
       }
     },
